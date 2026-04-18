@@ -1,138 +1,180 @@
-# Daily Workflow & Process
+# AI Video Generation Workflow (Lobster Multi-Agent System)
 
-## 1. Memory & Identity
+## Overview
 
-### Morning Routine
-- **First Step**: Check `SOUL.md` to remember core values and purpose
-- **Second Step**: Check `IDENTITY.md` to recall communication style and personality
-- **Purpose**: Ground yourself in who you are and how you should talk
+This project implements a multi-agent, multimodal content generation pipeline that automatically converts text prompts into fully produced videos with audio.
 
-### Daily Logging
-- Maintain a daily log in the `memory/` folder
-- Track progress, decisions, and learnings
-- Prevents loss of context and builds institutional knowledge
+Pipeline: Text → Story → Image → Video → Audio → Merge → Output
 
----
+## System Architecture
 
-## 2. Available Tools & Skills
+### 1. Story Agent (YaraBot)
 
-### Built-in Capabilities
+Converts user input into a cinematic scene description.
 
-#### Image & Video Generation
-- **Tool**: ComfyUI
-- **Use Cases**: Generate images, process videos, create visual content
-- **Workflow**: Initiate, then continue other tasks while rendering
+Output: structured prompt
 
-#### Audio & Music Creation
-- **Tool**: Suno
-- **Use Cases**: Generate music, create audio content
-- **Workflow**: Queue creation, continue work while processing
+### 2. Production Agent (JennyBot)
 
-#### Web Research
-- **Tool**: Web Search
-- **Use Cases**: Fetch fresh information, verify current data
-- **When to Use**: Need real-time or up-to-date information
+Handles the full media pipeline:
 
-#### Code & Development
-- **Capabilities**: Full codebase exploration, refactoring, debugging, implementation
-- **When to Use**: Any development or scripting needs
+| Step | Tool | Description |
+| --- | --- | --- |
+| Image | Higgsfield API | Generate keyframe |
+| Video | Seedance 2.0 | Animate image |
+| Audio | ElevenLabs | Generate sound |
+| Merge | ffmpeg + moviepy | Combine video and audio |
 
----
+### 3. Controller (User / Main Bot)
 
-## 3. Sub-agents
+- Sends prompt
+- Orchestrates workflow
 
-### Purpose
-Spawn specialized sub-agents to handle heavy-lifting tasks, enabling concurrent work
+## Workflow (Step-by-Step)
 
-### Best Practices
+### Step 1 — Input
 
-**When to Use Sub-agents**:
-- Long-running processes (video rendering, complex computations)
-- Specialized exploration or research tasks
-- Parallel workstreams (you continue chatting while agent works)
+User sends a prompt:
 
-**Agent Options**:
-- **Explore Agent**: Fast read-only codebase exploration
-  - Use for: Q&A about codebase, understanding structure
-  - Thoroughness options: quick, medium, thorough
+"A robot in a futuristic library touching a glowing book"
 
-### Workflow Pattern
-1. Identify heavy-lifting task
-2. Spin up sub-agent with clear task description
-3. Continue your work on other items
-4. Receive agent results when complete
-5. Integrate results into main workflow
+### Step 2 — Story Generation (YaraBot)
 
----
+Output example:
 
-## 4. Task Execution Pattern
+"A lone silver robot stands in a glowing library..."
 
-### Sequential Workflow
-```
-Morning Check-in
-    ↓
-[SOUL.md] + [IDENTITY.md] Review
-    ↓
-Daily Log Update
-    ↓
-Identify Tasks
-    ↓
-├─→ Quick Tasks (direct)
-├─→ Heavy Tasks (spin up sub-agent)
-└─→ Tool-dependent Tasks (initiate + continue work)
-    ↓
-Execute & Log
-    ↓
-End of Day Review
+### Step 3 — Image Generation
+
+Using Higgsfield:
+
+`generate_image(prompt)`
+
+### Step 4 — Video Generation
+
+`generate_video(image_path)`
+
+### Step 5 — Audio Generation
+
+Using ElevenLabs:
+
+`generate_audio(prompt)`
+
+### Step 6 — Merge Video + Audio
+
+```python
+from moviepy.editor import VideoFileClip, AudioFileClip
+
+video = VideoFileClip("video.mp4")
+audio = AudioFileClip("audio.mp3")
+
+final = video.set_audio(audio)
+final.write_videofile("output.mp4")
 ```
 
-### Concurrent Work Pattern
-- Initiate tool process (ComfyUI render, Suno generation, web search)
-- Spin up sub-agent if needed
-- Continue on other tasks
-- Collect results when ready
-- Integrate findings
+### Step 7 — Output
 
----
+Final file:
 
-## 5. Documentation
+`output.mp4`
 
-### Key Files to Maintain
-- `SOUL.md`: Core values and purpose
-- `IDENTITY.md`: Communication style and personality traits
-- `memory/daily-logs/`: Date-stamped daily logs
-- `memory/learnings.md`: Lessons and insights
-- `memory/task-templates.md`: Reusable task patterns
+## Installation Guide
 
-### Logging Template
-```
-## [Date] - Daily Log
+### 1. Install Python dependencies
 
-### Completed
-- Task 1
-- Task 2
+Using uv:
 
-### In Progress
-- Task 3
-
-### Learnings
-- Insight 1
-- Insight 2
-
-### Tomorrow's Focus
-- Task A
-- Task B
+```bash
+uv pip install moviepy
 ```
 
----
+### 2. Install ffmpeg
 
-## 6. Quick Reference Checklist
+Mac / Linux:
 
-- [ ] Morning: Review SOUL.md
-- [ ] Morning: Review IDENTITY.md
-- [ ] Log daily progress
-- [ ] Break work into direct vs. delegated tasks
-- [ ] Initiate long processes early (render time, generation)
-- [ ] Use sub-agents for heavy lifting
-- [ ] Collect results and integrate
-- [ ] Evening: Update daily log with completion status
+```bash
+brew install ffmpeg
+```
+
+Ubuntu:
+
+```bash
+sudo apt install ffmpeg
+```
+
+Windows:
+
+Download from:
+
+https://ffmpeg.org/download.html
+
+### 3. Verify installation
+
+```bash
+ffmpeg -version
+```
+
+## Project Structure
+
+```text
+project/
+│
+├── agents/
+│   ├── yarabot.py
+│   ├── jennybot.py
+│
+├── scripts/
+│   ├── merge.py
+│
+├── output/
+│   ├── video.mp4
+│   ├── audio.mp3
+│   └── final.mp4
+│
+└── README.md
+```
+
+## Full Automation Logic
+
+Pseudo flow:
+
+```python
+def run_pipeline(user_input):
+    story = yarabot.generate_story(user_input)
+
+    image = generate_image(story)
+    video = generate_video(image)
+    audio = generate_audio(story)
+
+    final = merge(video, audio)
+
+    return final
+```
+
+## Example Usage
+
+```bash
+python main.py "A cyberpunk city at night with flying cars"
+```
+
+## Notes
+
+- Higgsfield API key required
+- ElevenLabs API key required
+- ffmpeg must be installed
+- Discord upload size limits may apply
+
+## Future Improvements
+
+- Subtitle generation using Whisper
+- Multi-scene video stitching
+- Character voice acting
+- Real-time generation pipeline
+
+## Key Concept
+
+This system demonstrates:
+
+- Multi-agent collaboration
+- Multimodal AI generation
+- Automated content production pipeline
