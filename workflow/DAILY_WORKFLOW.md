@@ -12,18 +12,33 @@ Pipeline: Discord Prompt -> Plan -> Scene Assets -> Render -> Assemble -> Discor
 
 ## Runtime roles
 
-### Computer A (Script Director Bot)
+### Computer A (YaraBot / Script Director Bot)
 
 - Reads prompt from Discord
+- Plans and scripts scenes against music/emotional timing
 - Generates structured plan
 - Publishes plan to render queue
 
-### Computer B (Video Generation Bot)
+### Computer B (JennyBot / Video Generation Bot)
 
 - Reads plan from render queue
-- Generates scene media
+- Generates scene media with tools such as ComfyUI
+- Handles music/audio generation (for example via Suno)
 - Assembles final video
 - Publishes result
+
+## Isolation model
+
+YaraBot and JennyBot do not share filesystem state or in-memory context. They operate in independent workspaces. All handoff data must be explicitly relayed by the orchestrator.
+
+Required relay payload per job:
+
+- `job_id`
+- `origin_channel_id`
+- `origin_message_id`
+- `spec` (embedded or file link)
+- `status`
+- `artifact_refs` (optional, append-only)
 
 ## Command pattern
 
@@ -65,8 +80,8 @@ Copy `.env.example` to `.env` and configure:
 
 ## Operational checklist
 
-1. Start Script Director Bot on Computer A.
-2. Start Video Generation Bot on Computer B.
+1. Start YaraBot on Computer A.
+2. Start JennyBot on Computer B.
 3. Send one test prompt in `#idea-input`.
 4. Confirm plan appears in `#script-output` or `#render-queue`.
 5. Confirm final `.mp4` appears in `#final-videos`.

@@ -1,4 +1,4 @@
-# video-generation
+# video-generation (JennyBot)
 
 ## Purpose
 
@@ -18,7 +18,7 @@ Turn a structured scene plan into final rendered video deliverables.
 ## Responsibilities
 
 1. Render scene anchors (image/video).
-2. Generate speech/music/effects when requested.
+2. Generate speech/music/effects when requested (for example with Suno).
 3. Assemble final video with ffmpeg.
 4. Preserve intermediates for resume/retry.
 
@@ -27,6 +27,7 @@ Turn a structured scene plan into final rendered video deliverables.
 - Scene-level retries on transient errors.
 - Resume from existing scene outputs.
 - Consistent output naming by job ID.
+- Read only local workspace context; rely on relayed job payload for cross-bot continuity.
 
 ## Notes
 

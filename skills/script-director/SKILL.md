@@ -1,4 +1,4 @@
-# script-director
+# script-director (YaraBot)
 
 ## Purpose
 
@@ -23,8 +23,15 @@ Structured plan containing:
 ## Responsibilities
 
 1. Clarify ambiguous prompts.
-2. Produce scene-by-scene plan.
+2. Produce scene-by-scene plan aligned with emotional beats and timing.
 3. Keep output deterministic and machine-readable.
+
+## Typical process
+
+1. Planning and scripting.
+2. Build scene sequence and timing structure.
+3. Prepare anchor descriptions for downstream generation.
+4. Hand off full structured plan to relay/orchestrator.
 
 ## Handoff contract
 

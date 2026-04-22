@@ -4,9 +4,9 @@ Three composable OpenClaw-style skills that work together so two Discord bots (r
 
 ```
 Discord idea prompt
-    └─ script-director (Bot A)
+    └─ YaraBot / script-director (Bot A)
           └─ structured scene plan (YAML/JSON)
-                └─ video-generation (Bot B)
+                └─ JennyBot / video-generation (Bot B)
                       ├─ key images
                       ├─ animated clips
                       ├─ voice/music/audio
@@ -52,9 +52,16 @@ See: [skills/discord-workflow/SKILL.md](skills/discord-workflow/SKILL.md)
 
 ## How they compose
 
-1. Bot A receives idea text in Discord and outputs a structured scene plan.
-2. Bot B renders assets and assembles final video from that plan.
-3. The orchestrator posts progress and final deliverables in configured Discord channels.
+1. **YaraBot** receives idea text in Discord and outputs a structured scene plan.
+2. **JennyBot** renders assets and assembles final video from that plan.
+3. The orchestrator relays progress and final deliverables in configured Discord channels.
+
+## Workspace isolation and relay rule
+
+- YaraBot and JennyBot run in separate workspaces.
+- They cannot directly read each other's files or generation progress.
+- A relay/orchestrator layer must pass plan content and job status between bots.
+- Shared context must be transferred through Discord payloads or structured job specs.
 
 The workflow spec and operating notes are in [workflow/DAILY_WORKFLOW.md](workflow/DAILY_WORKFLOW.md).
 
