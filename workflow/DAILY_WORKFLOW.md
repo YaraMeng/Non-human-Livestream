@@ -12,14 +12,14 @@ Pipeline: Discord Prompt -> Plan -> Scene Assets -> Render -> Assemble -> Discor
 
 ## Runtime roles
 
-### Computer A (YaraBot / Script Director Bot)
+### Hosted Bot A (YaraBot / Script Director Bot)
 
 - Reads prompt from Discord
 - Plans and scripts scenes against music/emotional timing
 - Generates structured plan
 - Publishes plan to render queue
 
-### Computer B (JennyBot / Video Generation Bot)
+### Hosted Bot B (JennyBot / Video Generation Bot)
 
 - Reads plan from render queue
 - Generates scene media with tools such as ComfyUI
@@ -40,9 +40,9 @@ Required relay payload per job:
 - `status`
 - `artifact_refs` (optional, append-only)
 
-## Command pattern
+## Command pattern (self-hosted only)
 
-Use a consistent command layout similar to creative-skills:
+If you run the bots locally, use a consistent command layout similar to creative-skills:
 
 ```bash
 python3 code/workflow.py plan <spec.yaml>      # validate and print scene breakdown
@@ -70,7 +70,7 @@ Reference example:
 
 ## Environment
 
-Copy `.env.example` to `.env` and configure:
+Only required for self-hosted deployments. Copy `.env.example` to `.env` and configure:
 
 - Discord bot tokens
 - Discord channel IDs

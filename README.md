@@ -1,6 +1,6 @@
 # discord-openclaw-robots-workflow
 
-Three composable OpenClaw-style skills that work together so two Discord bots (running on two computers) can turn a text idea into a finished video.
+Three composable OpenClaw-style skills that work together so two Discord bots (hosted online) can turn a text idea into a finished video.
 
 ```
 Discord idea prompt
@@ -65,9 +65,11 @@ See: [skills/discord-workflow/SKILL.md](skills/discord-workflow/SKILL.md)
 
 The workflow spec and operating notes are in [workflow/DAILY_WORKFLOW.md](workflow/DAILY_WORKFLOW.md).
 
-## Install
+## Deployment
 
-Clone this repository and configure secrets locally:
+The bots are hosted online and operate entirely within Discord. No local runtime is required for normal use.
+
+If you self-host the bots, configure secrets locally:
 
 ```bash
 cp .env.example .env

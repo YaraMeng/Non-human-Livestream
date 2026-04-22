@@ -9,6 +9,8 @@ Bots:
 - YaraBot (`script-director`)
 - JennyBot (`video-generation`)
 
+These bots are hosted online and do not require local runtime for standard operation.
+
 ## Responsibilities
 
 1. Receive user prompt in `idea-input`.
