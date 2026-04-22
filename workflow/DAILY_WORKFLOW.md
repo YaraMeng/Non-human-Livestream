@@ -1,180 +1,79 @@
-# AI Video Generation Workflow (Lobster Multi-Agent System)
+# Daily Workflow (Creative-Skills Style)
 
 ## Overview
 
-This project implements a multi-agent, multimodal content generation pipeline that automatically converts text prompts into fully produced videos with audio.
+This repository follows a composable-skill pattern:
 
-Pipeline: Text → Story → Image → Video → Audio → Merge → Output
+- `script-director` skill writes a structured production plan
+- `video-generation` skill renders scenes and assembles the final video
+- `discord-workflow` skill coordinates channels and bot-to-bot handoff
 
-## System Architecture
+Pipeline: Discord Prompt -> Plan -> Scene Assets -> Render -> Assemble -> Discord Delivery
 
-### 1. Story Agent (YaraBot)
+## Runtime roles
 
-Converts user input into a cinematic scene description.
+### Computer A (Script Director Bot)
 
-Output: structured prompt
+- Reads prompt from Discord
+- Generates structured plan
+- Publishes plan to render queue
 
-### 2. Production Agent (JennyBot)
+### Computer B (Video Generation Bot)
 
-Handles the full media pipeline:
+- Reads plan from render queue
+- Generates scene media
+- Assembles final video
+- Publishes result
 
-| Step | Tool | Description |
-| --- | --- | --- |
-| Image | Higgsfield API | Generate keyframe |
-| Video | Seedance 2.0 | Animate image |
-| Audio | ElevenLabs | Generate sound |
-| Merge | ffmpeg + moviepy | Combine video and audio |
+## Command pattern
 
-### 3. Controller (User / Main Bot)
-
-- Sends prompt
-- Orchestrates workflow
-
-## Workflow (Step-by-Step)
-
-### Step 1 — Input
-
-User sends a prompt:
-
-"A robot in a futuristic library touching a glowing book"
-
-### Step 2 — Story Generation (YaraBot)
-
-Output example:
-
-"A lone silver robot stands in a glowing library..."
-
-### Step 3 — Image Generation
-
-Using Higgsfield:
-
-`generate_image(prompt)`
-
-### Step 4 — Video Generation
-
-`generate_video(image_path)`
-
-### Step 5 — Audio Generation
-
-Using ElevenLabs:
-
-`generate_audio(prompt)`
-
-### Step 6 — Merge Video + Audio
-
-```python
-from moviepy.editor import VideoFileClip, AudioFileClip
-
-video = VideoFileClip("video.mp4")
-audio = AudioFileClip("audio.mp3")
-
-final = video.set_audio(audio)
-final.write_videofile("output.mp4")
-```
-
-### Step 7 — Output
-
-Final file:
-
-`output.mp4`
-
-## Installation Guide
-
-### 1. Install Python dependencies
-
-Using uv:
+Use a consistent command layout similar to creative-skills:
 
 ```bash
-uv pip install moviepy
+python3 code/workflow.py plan <spec.yaml>      # validate and print scene breakdown
+python3 code/workflow.py render <spec.yaml>    # render all scenes
+python3 code/workflow.py scene <N> <spec.yaml> # render one scene
+python3 code/workflow.py assemble <spec.yaml>  # final ffmpeg assembly
+python3 code/workflow.py all <spec.yaml>       # end-to-end, restart-safe
+python3 code/workflow.py status <spec.yaml>    # list generated artifacts
 ```
 
-### 2. Install ffmpeg
+## Suggested Discord channels
 
-Mac / Linux:
+- `#idea-input`
+- `#script-output`
+- `#render-queue`
+- `#final-videos`
 
-```bash
-brew install ffmpeg
-```
+## Spec format
 
-Ubuntu:
+Use a single YAML spec as the source of truth for one video job.
 
-```bash
-sudo apt install ffmpeg
-```
+Reference example:
 
-Windows:
+- [skills/discord-workflow/references/example.yaml](../skills/discord-workflow/references/example.yaml)
 
-Download from:
+## Environment
 
-https://ffmpeg.org/download.html
+Copy `.env.example` to `.env` and configure:
 
-### 3. Verify installation
+- Discord bot tokens
+- Discord channel IDs
+- OpenClaw endpoint and API key
+- Optional media provider keys
+- ffmpeg path
 
-```bash
-ffmpeg -version
-```
+## Operational checklist
 
-## Project Structure
+1. Start Script Director Bot on Computer A.
+2. Start Video Generation Bot on Computer B.
+3. Send one test prompt in `#idea-input`.
+4. Confirm plan appears in `#script-output` or `#render-queue`.
+5. Confirm final `.mp4` appears in `#final-videos`.
 
-```text
-project/
-│
-├── agents/
-│   ├── yarabot.py
-│   ├── jennybot.py
-│
-├── scripts/
-│   ├── merge.py
-│
-├── output/
-│   ├── video.mp4
-│   ├── audio.mp3
-│   └── final.mp4
-│
-└── README.md
-```
+## Reliability rules
 
-## Full Automation Logic
-
-Pseudo flow:
-
-```python
-def run_pipeline(user_input):
-    story = yarabot.generate_story(user_input)
-
-    image = generate_image(story)
-    video = generate_video(image)
-    audio = generate_audio(story)
-
-    final = merge(video, audio)
-
-    return final
-```
-
-## Example Usage
-
-```bash
-python main.py "A cyberpunk city at night with flying cars"
-```
-
-## Notes
-
-- Higgsfield API key required
-- ElevenLabs API key required
-- ffmpeg must be installed
-- Discord upload size limits may apply
-
-## Future Improvements
-
-- Subtitle generation using Whisper
-- Multi-scene video stitching
-- Character voice acting
-- Real-time generation pipeline
-
-## Key Concept
-
-This system demonstrates:
-
-- Multi-agent collaboration
-- Multimodal AI generation
-- Automated content production pipeline
+- Keep intermediate scene outputs so failed jobs can resume.
+- Keep each render job idempotent by job ID.
+- Retry network failures with bounded backoff.
+- Never store secrets in repository files.
