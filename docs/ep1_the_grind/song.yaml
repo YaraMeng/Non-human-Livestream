@@ -1,0 +1,8 @@
+song:
+  id: "song_v7"
+  episode: 1
+  title: "The Grind"
+  description: "Episode 1 song."
+  style: "atmospheric lo-fi hip hop"
+  bpm: 85
+  source_bot: "YaraBot"

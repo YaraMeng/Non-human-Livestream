@@ -15,6 +15,12 @@ node_modules/
 dist/
 build/
 
+# Local environment and secrets
+.env
+.env.local
+.env.*
+!.env.example
+
 # Generated media
 assets/generated/
 presentation/*.pdf

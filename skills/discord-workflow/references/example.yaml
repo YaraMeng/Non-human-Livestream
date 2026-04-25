@@ -1,0 +1,42 @@
+job:
+  id: "job-2026-04-22-001"
+  title: "Robot Librarian at Night"
+  prompt: "A robot in a futuristic library touching a glowing book."
+  aspect_ratio: "16:9"
+  fps: 24
+  resolution:
+    width: 1920
+    height: 1080
+
+style:
+  visual: "cinematic, neon dust, volumetric light, gentle camera motion"
+  audio: "ambient sci-fi with soft synth pads"
+
+scenes:
+  - id: 1
+    seconds: 6
+    visual_prompt: "Wide shot of a futuristic library with floating shelves and a silver robot."
+    camera_hint: "slow dolly in"
+    audio_hint: "soft atmospheric hum"
+  - id: 2
+    seconds: 7
+    visual_prompt: "Medium shot as the robot opens a glowing ancient book."
+    camera_hint: "static with subtle handheld drift"
+    audio_hint: "rising shimmer and pulse"
+  - id: 3
+    seconds: 6
+    visual_prompt: "Close-up of the book pages emitting holographic symbols."
+    camera_hint: "macro push in"
+    audio_hint: "sparkling digital chimes"
+
+providers:
+  openclaw:
+    enabled: true
+  image: "higgsfield"
+  video: "seedance-2.0"
+  audio: "elevenlabs"
+
+delivery:
+  discord:
+    guild_id: "${DISCORD_GUILD_ID}"
+    output_channel_id: "${DISCORD_FINAL_VIDEO_CHANNEL_ID}"
