@@ -77,6 +77,15 @@ cp .env.example .env
 
 Then fill in your Discord and OpenClaw credentials in `.env`.
 
+## Group Members & Contributions
+
+| Member | Role | Responsibility |
+|---|---|---|
+| Ma Jiayin | Anchor Artist | Generate anchor/character pictures |
+| iu Yifei | Script Writer | Generate video scripts and scene plans |
+| Meng Yayuan | Audio Producer | Generate audio, voiceovers, and music |
+| Chen Yingwen | Video Editor | Generate video clips and final assembly |
+
 ## Repository layout
 
 - [skills/](skills/) - composable skill modules
@@ -85,6 +94,71 @@ Then fill in your Discord and OpenClaw credentials in `.env`.
 - [code/](code/) - implementation scripts
 - [assets/](assets/) - generated outputs
 - [docs/](docs/) - supporting notes
+
+## Usage
+
+### Prerequisites
+
+- Python 3.10+
+- Discord bot tokens (configured in `.env`)
+- OpenClaw API credentials
+
+### Setup
+
+```bash
+# Clone the repository
+git clone <repo-url>
+cd Non-human-Livestream
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Configure environment variables
+cp .env.example .env
+# Then fill in your Discord and OpenClaw credentials in .env
+```
+
+### Running the Workflow
+
+1. **Start YaraBot** (script-director) in its workspace:
+   ```bash
+   python code/yara_bot.py
+   ```
+2. **Start JennyBot** (video-generation) in its workspace:
+   ```bash
+   python code/jenny_bot.py
+   ```
+3. **Start the orchestrator** (discord-workflow):
+   ```bash
+   python code/orchestrator.py
+   ```
+
+The bots will listen for idea prompts in configured Discord channels and process them through the full pipeline automatically.
+
+### Workflow Pipeline
+
+```
+User submits idea in Discord
+    │
+    ▼
+YaraBot (script-director)
+    - Generates structured scene plan (YAML)
+    │
+    ▼
+JennyBot (video-generation)
+    - Generates key images (anchor pictures)
+    - Generates script and audio (TTS/voiceover)
+    - Generates video clips
+    - Assembles final .mp4
+    │
+    ▼
+Discord orchestrator (discord-workflow)
+    - Uploads final video and metadata back to Discord
+```
+
+### Output
+
+Generated videos and assets are saved to the [assets/](assets/) directory.
 
 ## Security
 
