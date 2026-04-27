@@ -82,7 +82,7 @@ Then fill in your Discord and OpenClaw credentials in `.env`.
 | Member | Role | Responsibility |
 |---|---|---|
 | Ma Jiayin | Anchor Artist | Generate anchor/character pictures |
-| iu Yifei | Script Writer | Generate video scripts and scene plans |
+| Liu Yifei | Script Writer | Generate vsideo scripts and scene plans |
 | Meng Yayuan | Audio Producer | Generate audio, voiceovers, and music |
 | Chen Yingwen | Video Editor | Generate video clips and final assembly |
 
